@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en" class="no-js">
+<head>
+    <meta charset="UTF-8">
+    <meta content="width=device-width,initial-scale=1.0" name="viewport">
+    <link href='http://fonts.googleapis.com/css?family=PT+Sans:400,700' rel='stylesheet' type='text/css'>
+
+    <title>Dudnikov Blog&copy;</title>
+    <script src="/src/js/modernizr.js"></script>
+   
+</head>
+<body>
+<header role="banner">
+    <div id="cd-logo"><a href="#0"><img src=""></a></div>
+    <h2 class="user_nickname"></h2>
+    <nav class="main-nav">
+      <ul>
+        <!-- inser more links here -->
+        <li><a class="cd-signin" href="#0">Sign in</a></li>
+        <li><a class="cd-signup" href="#0">Sign up</a></li>
+        <li><a class="cd-signout" href="#0">Sign out</a></li>
+        <li><a class="cd-create-post" href="#0">Create new post</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <div class="cd-user-modal"> <!-- this is the entire modal form, including the background -->
+    <div class="cd-user-modal-container"> <!-- this is the container wrapper -->
+      <ul class="cd-switcher">
+        <li><a href="#0">Sign in</a></li>
+        <li><a href="#0">New account</a></li>
+      </ul>
+
+      <div id="cd-login"> <!-- log in form -->
+        <form class="cd-form">
+          <p class="fieldset">
+            <label class="image-replace cd-email" for="signin-email">E-mail</label>
+            <input class="full-width has-padding has-border" id="signin-email" type="email" placeholder="E-mail">
+            <span class="cd-error-message">Error message here!</span>
+          </p>
+
+          <p class="fieldset">
+            <label class="image-replace cd-password" for="signin-password">Password</label>
+            <input class="full-width has-padding has-border" id="signin-password" type="text"  placeholder="Password">
+            <a href="#0" class="hide-password">Hide</a>
+            <span class="cd-error-message">Error message here!</span>
+          </p>
+
+          <p class="fieldset">
+            <input class="full-width" type="submit" id="login" value="Login">
+          </p>
+        </form>
+
+      </div> <!-- cd-login -->
+
+      <div id="cd-signup"> <!-- sign up form -->
+        <form class="cd-form">
+          <p class="fieldset">
+            <label class="image-replace cd-username" for="signup-username">Username</label>
+            <input class="full-width has-padding has-border" id="signup-username" type="text" placeholder="Username">
+            <span class="cd-error-message">Error message here!</span>
+          </p>
+
+          <p class="fieldset">
+            <label class="image-replace cd-email" for="signup-email">E-mail</label>
+            <input class="full-width has-padding has-border" id="signup-email" type="email" placeholder="E-mail">
+            <span class="cd-error-message">Error message here!</span>
+          </p>
+
+          <p class="fieldset">
+            <label class="image-replace cd-password" for="signup-password">Password</label>
+            <input class="full-width has-padding has-border" id="signup-password" type="text"  placeholder="Password">
+            <a href="#0" class="hide-password">Hide</a>
+            <span class="cd-error-message">Error message here!</span>
+          </p>
+
+          <p class="fieldset">
+            <input class="full-width has-padding" type="submit" id="create_account" value="Create account">
+          </p>
+        </form>
+
+        <a href="#0" class="cd-close-form">Close</a>
+      </div> <!-- cd-signup -->
+
+      <div id="cd-userinfo"> <!-- user info form -->
+        <form class="cd-form">
+          <p class="fieldset">
+            <label class="image-replace cd-username" for="signup-username">Username</label>
+            <input class="full-width has-padding has-border" id="modal-username" type="text" placeholder="Username">
+          </p>
+
+          <p class="fieldset">
+            <label class="image-replace" for="signup-email">E-mail</label>
+            <input class="full-width has-padding has-border" id="modal-city" type="text" placeholder="Your city">
+          </p>
+
+          
+          <p class="fieldset">
+          <h1>Change avatar</h2>
+            <input type="file" class="avatar_upl" name="avatar_upload" />
+            <input type="button" id="avatar_load" class="avatar_to_server" name="avatar_load" value="Upload and change" />
+          </p>
+
+          <p class="fieldset">
+            <input class="full-width has-padding" type="submit" id="save_changes" value="Save changes">
+          </p>
+        </form>
+
+      </div> <!-- cd-userinfo -->
+      
+      <div id="cd-create-post"> <!-- user info form -->
+        <form class="cd-form">
+          <p class="fieldset">
+          <h1 class="new-post">Create a new post</h1>
+            <label class="image-replace cd-username" for="modal-post-theme">Post theme</label>
+            <input class="full-width has-padding has-border" id="modal-post-theme" type="text" placeholder="Put theme here">
+          </p>
+
+          <!-- <p class="fieldset">
+            <label class="image-replace" for="modal-post-text">Post text</label>
+            <input class="full-width has-padding has-border" id="modal-post-text" type="text" placeholder="Put post here">
+          </p> -->
+
+          <p class="fieldset">
+            <!-- <label class="image-replace" for="modal-post-text">Post text</label> -->
+            <p><textarea id="modal-post-text" class="full-width has-padding has-border" name="comment"></textarea></p>
+          </p>
+
+          <p class="fieldset">
+            <input class="full-width has-padding add_post" type="button" id="add_post" value="Add post">
+          </p>
+        </form>
+
+      </div> <!-- cd-userinfo -->
+      <a href="#0" class="cd-close-form">Close</a>
+    </div> <!-- cd-user-modal-container -->
+  </div> <!-- cd-user-modal -->
+  <div class="container">
+    <div class="cols col-3 sidebar">
+    <ul class="buttons" id="buttons">
+    
+    </ul>
+    </div>
+    <div class="cols col-9" id="text">HERE THERE</div>
+  </div>
+</body>
+</html>
