@@ -22,240 +22,264 @@ Date.prototype.getMonthName = function() {
     return month[this.getMonth()];
   }
   // Initialize Firebase
-$(document).ready(function() {
-  
-  function save_edited_comment() {
-    var comment = $('#modal-comment').val();
-    var keys = $(".comment-edit").attr('class').split(" ");
-    var key1 = keys[2];
-    var key2 = keys[1];
-    firebase.database().ref('/comments/' + key1 + "/" + key2).once('value').then(function(snapshot) {
-      var data = snapshot.val();
 
-      var postData = {
-        authorID: data.authorID,
-        comment_text: comment,
-        date: data.date,
-        username: data.username
-      };
-      updates = {};
-      updates['/comments/' + key1 + "/" + key2] = postData;
-      return firebase.database().ref().update(updates);
-      window.location.reload();
-    });
-  }
+function save_edited_comment() {
+  var comment = $('#modal-comment').val();
+  var keys = $(".comment-edit").attr('class').split(" ");
+  var key1 = keys[2];
+  var key2 = keys[1];
+  firebase.database().ref('/comments/' + key1 + "/" + key2).once('value').then(function(snapshot) {
+    var data = snapshot.val();
 
-  function edit_comment_post(key1, key2) {
-    $('.cd-user-modal').addClass('is-visible');
-    $('.cd-switcher').remove();
-    $('#cd-login').remove();
-    $('#cd-signup').remove();
-    $('#cd-userinfo').removeClass('is-selected');
-    $('#cd-create-post').removeClass('is-selected');
-    $('#cd-comment-edit').addClass('is-selected');
-    return firebase.database().ref('/comments/' + key1 + "/" + key2).once('value').then(function(snapshot) {
-      var data = snapshot.val();
-      $("#modal-comment").val(data.comment_text);
-      $(".comment-edit").addClass(key2).addClass(key1);
-    });
-  }
-   $(".post_comments").on('click', 'img.edit_comment', function(event) {
-    event.preventDefault();
-    key1 = $(".active").attr('class').split(" ")[0];
-    key2 = $(this).attr('class').split(" ")[1];
-    edit_comment_post(key1, key2);
+    var postData = {
+      authorID: data.authorID,
+      comment_text: comment,
+      date: data.date,
+      username: data.username
+    };
+    updates = {};
+    updates['/comments/' + key1 + "/" + key2] = postData;
+    return firebase.database().ref().update(updates);
+    window.location.reload();
   });
-  $(".post_comments").on('click', 'img.delete_comment', function(event) {
-    event.preventDefault();
-      var key1 = $(".active").attr('class').split(" ")[0];
-      var key2 = ($(this)).attr('class').split(" ")[1];
-      delete_comment_from_post(key1, key2);
-  });
-  function edit_post() {
-    var active_post = $(".active").attr('class').split(" ")[0];
-    $('.cd-user-modal').addClass('is-visible');
-    $('.cd-switcher').remove();
-    $('#cd-login').remove();
-    $('#cd-signup').remove();
-    $('#cd-userinfo').removeClass('is-selected');
-    $('#cd-comment-edit').removeClass('is-selected');
-    $('#cd-create-post').addClass('is-selected');
-    $('.new-post').text("Edit post");
-    firebase.database().ref('/posts/' + active_post).once('value').then(function(snapshot) {
-      data = snapshot.val();
-      $('#modal-post-theme').val(data.post_theme);
-      $('#modal-post-text').text(data.post_text);
-      $('#add_post').css("display", "none");
-      $('#edit_post').css("display", "block");
-    });
-  };
+}
 
-  function save_edited_post() {
-    var active_post = $(".active").attr('class').split(" ")[0];
-    firebase.database().ref('/posts/' + active_post).once('value').then(function(snapshot) {
-      data = snapshot.val();
-      var new_post_theme = $('#modal-post-theme').val();
-      var new_post_text = $('#modal-post-text').text();
-      firebase.database().ref('posts/' + active_post).set({
-        autor_info: {
-          userid: data.autor_info.userid,
-          username: data.autor_info.username
-        },
-        date: {
-          date: data.date.date,
-          time: data.date.time
-        },
-        post_text: new_post_text,
-        post_theme: new_post_theme
+function edit_comment_post(key1, key2) {
+  $('.cd-user-modal').addClass('is-visible');
+  $('.cd-switcher').remove();
+  $('#cd-login').remove();
+  $('#cd-signup').remove();
+  $('#cd-userinfo').removeClass('is-selected');
+  $('#cd-create-post').removeClass('is-selected');
+  $('#cd-comment-edit').addClass('is-selected');
+  return firebase.database().ref('/comments/' + key1 + "/" + key2).once('value').then(function(snapshot) {
+    var data = snapshot.val();
+    $("#modal-comment").val(data.comment_text);
+    $(".comment-edit").addClass(key2).addClass(key1);
+  });
+}
+
+$(".post_comments").on('click', 'img.edit_comment', function(event) {
+  event.preventDefault();
+  key1 = $(".active").attr('class').split(" ")[0];
+  key2 = $(this).attr('class').split(" ")[1];
+  edit_comment_post(key1, key2);
+});
+
+$(".buttons").on('click', 'li', function(event) {
+  event.preventDefault();
+  $(".active").removeClass('active');
+  var key = $(this).attr('class').split(" ")[0];
+  $(this).addClass('active');
+  post_load(key);
+});
+
+$(".post_comments").on('click', 'img.delete_comment', function(event) {
+  event.preventDefault();
+  var key1 = $(".active").attr('class').split(" ")[0];
+  var key2 = ($(this)).attr('class').split(" ")[1];
+  delete_comment_from_post(key1, key2);
+});
+
+function edit_post() {
+  var active_post = $(".active").attr('class').split(" ")[0];
+  $('.cd-user-modal').addClass('is-visible');
+  $('.cd-switcher').remove();
+  $('#cd-login').remove();
+  $('#cd-signup').remove();
+  $('#cd-userinfo').removeClass('is-selected');
+  $('#cd-comment-edit').removeClass('is-selected');
+  $('#cd-create-post').addClass('is-selected');
+  $('.new-post').text("Edit post");
+  firebase.database().ref('/posts/' + active_post).once('value').then(function(snapshot) {
+    data = snapshot.val();
+    $('#modal-post-theme').val(data.post_theme);
+    $('#modal-post-text').text(data.post_text);
+    $('#add_post').css("display", "none");
+    $('#edit_post').css("display", "block");
+  });
+};
+
+function save_edited_post() {
+  var active_post = $(".active").attr('class').split(" ")[0];
+  firebase.database().ref('/posts/' + active_post).once('value').then(function(snapshot) {
+    data = snapshot.val();
+    var new_post_theme = $('#modal-post-theme').val();
+    var new_post_text = $('#modal-post-text').text();
+    firebase.database().ref('posts/' + active_post).set({
+      autor_info: {
+        userid: data.autor_info.userid,
+        username: data.autor_info.username
+      },
+      date: {
+        date: data.date.date,
+        time: data.date.time
+      },
+      post_text: new_post_text,
+      post_theme: new_post_theme
+    });
+  });
+};
+
+function delete_comment_from_post(key1, key2) {
+  var ansver = confirm("Delete this comment?");
+  if (ansver === true) {
+    firebase.database().ref("/comments/" + key1 + "/" + key2).remove();
+  } else {
+    return;
+  }
+}
+
+function delete_post() {
+  var ansver = confirm("Delete this post?");
+  if (ansver === true) {
+    var key = $(".active").attr('class').split(" ")[0];
+    var uid = firebase.auth().currentUser.uid;
+    firebase.database().ref("/comments/" + key).remove();
+    firebase.database().ref("/postkeys/" + key).remove();
+    firebase.database().ref("/posts/" + key).remove();
+    firebase.database().ref("/userposts/" + uid + "/" + key).remove();
+    $('.post_wrapper').css("display", "none");
+    $('.comments').css("display", "none");
+  } else {
+    return;
+  }
+}
+
+function get_uid() {
+  return firebase.auth().currentUser.uid;
+};
+
+function set_user_avatar(uid, place) {
+  $(place).attr({
+    src: "/src/img/loading.gif"
+  });
+  storageRef.child('images/' + uid + "/avatar.jpg").getDownloadURL().then(function(url) {
+    $(place).attr({
+      src: url
+    }).css("visibility", "visible");
+  });
+};
+
+function set_author_name(uid, place) {
+  firebase.database().ref('/users/' + uid).once('value').then(function(snapshot) {
+    var user = snapshot.val();
+    $(place).text(user.username);
+  });
+};
+
+function userinfo_load() {
+  var user = firebase.auth().currentUser;
+  var formModal = $('.cd-user-modal');
+  formModal.removeClass('is-visible');
+  var uid = get_uid();
+  return firebase.database().ref('/users/' + uid).once('value').then(function(snapshot) {
+    var username = snapshot.val().username;
+    $(".main-nav ul li").css("display", "inline-block");
+    $(".user_nickname").text(username);
+    place1 = "#cd-logo a img";
+    place2 = ".avatar a img";
+    set_user_avatar(uid, place1);
+    set_user_avatar(uid, place2);
+    $(".user_nickname").css("visibility", "visible");
+    $(".cd-signin, .cd-signup").css("display", "none");
+    $(".cd-signout, .cd-create-post").css("display", "block");
+  });
+};
+function add_post_to_list(key){
+  firebase.database().ref('/posts/' + key).once('value').then(function(snapshot) {
+        var button = $("<li></li>").text(snapshot.val().post_theme).addClass(snapshot.key);
+        $('#buttons').append(button);
       });
-    });
-  };
+}
+function posts_load() {
+  return firebase.database().ref('/postkeys').on('value', function(snapshot) {
+    var data = snapshot.val();
+    var mass = Object.keys(data);
+    $("#buttons").empty();
+    for (var i = 0; i <= mass.length - 1; i++) {
+      var key = mass[i];
+      add_post_to_list(key);
+    }
+  });
+};
 
-  function delete_comment_from_post(key1, key2) {
-    var ansver = confirm("Delete this comment?");
-    if (ansver === true) {
-      firebase.database().ref("/comments/" + key1 + "/" + key2).remove();
+function post_load(key) {
+  firebase.database().ref('/posts/' + key).once('value').then(function(snapshot) {
+    var data = snapshot.val();
+    $('.comments, .post_wrapper').css("display", "block");
+    var uid = data.autor_info.userid;
+    var place = ".author_avatar a img";
+    set_user_avatar(uid, place);
+    set_author_name(uid, '.author_name')
+    $('.post_title').text(data.post_theme);
+    $('.post_date').text(data.date.date + " " + data.date.time);
+    $('.post_text').text(data.post_text);
+  });
+  comments_load(key);
+};
+
+function comments_load(key) {
+  return firebase.database().ref('/comments/' + key).on('value', function(snapshot) {
+    $(".post_comments").empty();
+    $("#comment_input").val("");
+    var data = snapshot.val();
+    if (data !== null) {
+      var mass = Object.keys(data);
+      for (var i = 0; i <= mass.length - 1; i++) {
+        var key2 = mass[i];
+        var key = $('.active').attr('class').split(" ")[0];
+        var path = '/comments/' + key + "/" + key2;
+        comment_load(path);
+      }
+
     } else {
       return;
     }
-  }
+  });
+}
 
-  function delete_post() {
-    var ansver = confirm("Delete this post?");
-    if (ansver === true) {
-      var key = $(".active").attr('class').split(" ")[0];
-      var uid = firebase.auth().currentUser.uid;
-      firebase.database().ref("/comments/" + key).remove();
-      firebase.database().ref("/postkeys/" + key).remove();
-      firebase.database().ref("/posts/" + key).remove();
-      firebase.database().ref("/userposts/" + uid + "/" + key).remove();
-      $('.post_wrapper').css("display", "none");
-    } else {
-      return;
-    }
-  }
-  function get_uid(){
-    return firebase.auth().currentUser.uid;
-  };
-  function set_user_avatar(uid, place){
-    $(place).attr({src: "/src/img/loading.gif"});
-    storageRef.child('images/' + uid + "/avatar.jpg").getDownloadURL().then(function(url){
-        $(place).attr({
-          src: url
-        }).css("visibility", "visible");
-        });
-    
-  };
-  
-  function get_user_info(uid){
-    firebase.database().ref('/users/' + uid).once('value').then(function(snapshot) {
-      var user = snapshot.val();
-    });
-  };
+function comment_load(path) {
 
-  function set_author_name(uid, place){
-    firebase.database().ref('/users/' + uid).once('value').then(function(snapshot) {
-      var user = snapshot.val();
-      $(place).text(user.username);
-    });
-  };
+  firebase.database().ref(path).once('value').then(function(snapshot) {
+    var data = snapshot.val();
+    key = snapshot.key;
+    var html1 = "<div class=\"post_comment_wrapper " + key + "\"</div>";
+    var html2 = "<div class=\"comment_author_avatar " + key + "\"><a href=\"#0\"><img src=\"/src/img/loading.gif\"></a></div>";
+    var html3 = "<div class=\"userinfo_comment_wrapper " + key + "\"</div>"
+    var html4 = "<h2 class=\"comment_author " + key + "\"></h2>";
+    var html5 = "<p class=\"comment_text " + key + "\"></p>";
+    var html6 = "<p class=\"comment_date " + key + "\"></p>";
+    var images = "<img class=\"edit_comment " + key + "\" src=\"/src/img/pencil.png\" />" + "<img class=\"delete_comment " + snapshot.key + "\" src=\"/src/img/cross.png\" />"
+    $('.post_comments').append(html1);
+    post_comment_wrapper = ".post_comment_wrapper." + key;
+    $(post_comment_wrapper).append(html2, html3, images);
+    var comment_author_avatar = '.comment_author_avatar.' + key + " " + "a img";
+    var comment_author_name = '.comment_author.' + key;
+    var uid = data.authorID;
+    set_user_avatar(uid, comment_author_avatar);
+    set_author_name(uid, comment_author_name);
+    var userinfo_comment_wrapper = '.userinfo_comment_wrapper.' + key;
+    $(userinfo_comment_wrapper).append(html3, html4, html5, html6)
+    var comment_text = ".comment_text." + key;
+    $(comment_text).text(data.comment_text);
+    var comment_date = ".comment_date." + key;
+    $(comment_date).text(data.date.date + " " + data.date.time);
+  });
+}
 
+
+$(document).ready(function() {
   $(".delete_post").on('click', delete_post);
   $(".edit_post").on('click', edit_post);
   $('#edit_comment').on('click', save_edited_comment);
   $('#edit_post').on('click', save_edited_post);
+
+
   firebase.auth().onAuthStateChanged(function(user) {
     if (user) {
-      var user = firebase.auth().currentUser;
-      var formModal = $('.cd-user-modal');
-      formModal.removeClass('is-visible');
-      var userId = get_uid();
-      return firebase.database().ref('/users/' + userId).once('value').then(function(snapshot) {
-        var username = snapshot.val().username;
-        $(".main-nav ul li").css("display", "inline-block");
-        $(".user_nickname").text(username);
-        place1 = "#cd-logo a img";
-        place2 = ".avatar a img";
-        set_user_avatar(userId, place1);
-        set_user_avatar(userId, place2);
-        $(".user_nickname").css("visibility", "visible");
-        $(".cd-signin, .cd-signup").css("display", "none");
-        $(".cd-signout, .cd-create-post").css("display", "block");
-        return firebase.database().ref('/postkeys').on('value', function(snapshot) {
-          var data = snapshot.val();
-          var mass = Object.keys(data);
-          $("#buttons").empty();
-
-          for (var i = 0; i <= mass.length-1; i++) {
-            var key = mass[i];
-            firebase.database().ref('/posts/' + key).once('value').then(function(snapshot) {
-              var cls = "#buttons >li." + snapshot.key;
-              var text = "<li class=" + "'" + snapshot.key + "'>" + snapshot.val().post_theme + "</li>";
-              $('#buttons').append(text);
-              $(cls).click(function() {
-                $(".active").removeClass('active');
-                var key = $(this).attr('class').split(" ")[0];
-                $(this).addClass('active');
-                firebase.database().ref('/posts/' + key).once('value').then(function(snapshot) {
-                  var data = snapshot.val();
-                  $('.comments, .post_wrapper').css("display", "block");
-                  var uid = data.autor_info.userid;
-                  var place = ".author_avatar a img";
-                  set_user_avatar(uid, place);
-                  token.push($("#cd-logo a img").attr('src').split("=")[2]);
-                  set_author_name(uid, '.author_name')
-                  $('.post_title').text(data.post_theme);
-                  $('.post_date').text(data.date.date + " " + data.date.time);
-                  $('.post_text').text(data.post_text);
-                });
-                return firebase.database().ref('/comments/' + key).on('value', function(snapshot) {
-                  $(".post_comments").empty();
-                  $("#comment_input").val("");
-                  var data = snapshot.val();
-                  if (data !== null) {
-                    var mass1 = Object.keys(data);
-                    for (var i = 0; i <= mass1.length-1; i++) {
-                      var key2 = mass1[i];
-                      var key = $('.active').attr('class').split(" ")[0];
-                      var path = '/comments/' + key + "/" + key2;
-                      firebase.database().ref(path).once('value').then(function(snapshot) {
-                        var data1 = snapshot.val();
-                        key = snapshot.key;
-                        var html1 = "<div class=\"post_comment_wrapper " + key + "\"</div>";
-                        var html2 = "<div class=\"comment_author_avatar " + key + "\"><a href=\"#0\"><img src=\"/src/img/loading.gif\"></a></div>";
-                        var html3 = "<div class=\"userinfo_comment_wrapper " + key + "\"</div>"
-                        var html4 = "<h2 class=\"comment_author " + key + "\"></h2>";
-                        var html5 = "<p class=\"comment_text " + key + "\"></p>";
-                        var html6 = "<p class=\"comment_date " + key + "\"></p>";
-                        var images = "<img class=\"edit_comment " + key + "\" src=\"/src/img/pencil.png\" />" + "<img class=\"delete_comment " + snapshot.key + "\" src=\"/src/img/cross.png\" />"
-                        $('.post_comments').append(html1);
-                        post_comment_wrapper = ".post_comment_wrapper." + key;
-                        $(post_comment_wrapper).append(html2, html3, images);
-                        var comment_author_avatar = '.comment_author_avatar.' + key + " " + "a img";
-                        var comment_author_name = '.comment_author.' + key;
-                        var uid = data1.authorID;
-                        set_user_avatar(uid, comment_author_avatar);
-                        set_author_name(uid, comment_author_name);
-                        var userinfo_comment_wrapper = '.userinfo_comment_wrapper.' + key;
-                        $(userinfo_comment_wrapper).append(html3, html4, html5, html6)
-                        var comment_text = ".comment_text." + key;
-                        $(comment_text).text(data1.comment_text);
-                        var comment_date = ".comment_date." + key;
-                        $(comment_date).text(data1.date.date + " " + data1.date.time);
-
-                      });
-                    }
-                  } else {
-                    return;
-                  }
-                });
-              });
-            });
-          };
-
-        });
-      });
-
+      userinfo_load();
+      posts_load();
 
     } else {
       $(".main-nav ul li").css("display", "inline-block");
@@ -291,7 +315,6 @@ $(document).ready(function($) {
   $('.cd-create-post').on('click', add_post_selected);
   //save post to server button
   $('#add_post').on('click', write_post_to_server);
-  //edit comment
   //close modal
   formModal.on('click', function(event) {
     if ($(event.target).is(formModal) || $(event.target).is('.cd-close-form')) {
