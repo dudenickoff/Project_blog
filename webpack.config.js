@@ -7,7 +7,6 @@ module.exports = {
 	entry: [
 		"webpack-dev-server/client?http://localhost:4000",
 		"webpack/hot/only-dev-server",
-		'./src/js/registration.js',
 		'./src/js/main.js',
 		'./src/css/reset.css',
 		'./src/css/main.css'
