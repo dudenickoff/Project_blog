@@ -155,13 +155,7 @@ $(document).ready(function() {
         });
     
   };
-  function set_user_avatar1(uid, place, token){
-    var avatar_src = "https://firebasestorage.googleapis.com/v0/b/blog-dudnikov.appspot.com/o/images%2F" + uid + "%2Favatar.jpg?alt=media&token=" + token;
-    $(place).attr({
-          src: avatar_src
-        }).css("visibility", "visible");
-
-  };
+  
   function get_user_info(uid){
     firebase.database().ref('/users/' + uid).once('value').then(function(snapshot) {
       var user = snapshot.val();
