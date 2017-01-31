@@ -8,6 +8,7 @@ module.exports = {
 		"webpack-dev-server/client?http://localhost:4000",
 		"webpack/hot/only-dev-server",
 		'./src/js/main.js',
+		'./src/js/firebase.js',
 		'./src/css/reset.css',
 		'./src/css/main.css'
 	],
