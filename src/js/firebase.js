@@ -35,18 +35,14 @@ function add_comment_to_post() {
 	$('#comment_input').val("");
 	var key = $(".active").attr('class').split(" ")[0];
 	var uid = get_uid();
-	return firebase.database().ref('/users/' + uid).once('value').then(function(snapshot) {
-		var user = snapshot.val()
 		firebase.database().ref('comments/' + key).push({
 			authorID: uid,
-			username: user.username,
 			date: {
 				time: time,
 				date: date
 			},
 			comment_text: comment
 		});
-	});
 };
 
 function save_changes() {
@@ -85,7 +81,6 @@ function write_post_to_server() {
 			post_theme: post_theme,
 			post_text: post_text,
 			autor_info: {
-				username: user.username,
 				userid: uid
 			},
 			date: {
@@ -109,12 +104,10 @@ function save_edited_comment() {
 	var key2 = keys[1];
 	firebase.database().ref('/comments/' + key1 + "/" + key2).once('value').then(function(snapshot) {
 		var data = snapshot.val();
-
 		var postData = {
 			authorID: data.authorID,
 			comment_text: comment,
 			date: data.date,
-			username: data.username
 		};
 		updates = {};
 		updates['/comments/' + key1 + "/" + key2] = postData;
@@ -147,6 +140,8 @@ $(".post_comments").on('click', 'img.edit_comment', function(event) {
 
 $(".buttons").on('click', 'li', function(event) {
 	event.preventDefault();
+	var key_to_prev = $(".post_title").attr('id');
+	comment_changes_off(key_to_prev);
 	$(".active").removeClass('active');
 	var key = $(this).attr('class').split(" ")[0];
 	$(this).addClass('active');
@@ -188,7 +183,6 @@ function save_edited_post() {
 		firebase.database().ref('posts/' + active_post).set({
 			autor_info: {
 				userid: data.autor_info.userid,
-				username: data.autor_info.username
 			},
 			date: {
 				date: data.date.date,
@@ -293,35 +287,47 @@ function post_load(key) {
 		var place = ".author_avatar a img";
 		set_user_avatar(uid, place);
 		set_author_name(uid, '.author_name')
-		$('.post_title').text(data.post_theme);
+		$('.post_title').attr('id', "");
+		$('.post_title').text(data.post_theme).attr('id', key);
 		$('.post_date').text(data.date.date + " " + data.date.time);
 		$('.post_text').text(data.post_text);
 	});
 	comments_load(key);
 };
 
-function comments_load(key) {
-	return firebase.database().ref('/comments/' + key).on('value', function(snapshot) {
-		$(".post_comments").empty();
-		$("#comment_input").val("");
-		var data = snapshot.val();
-		if (data !== null) {
-			var mass = Object.keys(data);
-			for (var i = 0; i <= mass.length - 1; i++) {
-				var key2 = mass[i];
-				var key = $('.active').attr('class').split(" ")[0];
-				var path = '/comments/' + key + "/" + key2;
-				comment_load(path);
-			}
-
-		} else {
-			return;
-		}
+function comments_load(key){
+	$(".post_comments").empty();
+	$("#comment_input").val("");
+	
+	comment_changed(key);
+	comment_deleted(key);
+	comment_added(key);
+};
+function comment_changed(key){
+	return firebase.database().ref("/comments/" + key).on('child_changed', function(key2) {
+		$(".comment_text." + key2.key).text(key2.val().comment_text);
+});
+};
+function comment_deleted(key){
+	return firebase.database().ref("/comments/" + key).on('child_removed', function(oldChildSnapshot) {
+		$(".post_comment_wrapper." + oldChildSnapshot.key).remove();
 	});
 }
+function comment_added(key){
+	return firebase.database().ref("/comments/" + key).on('child_added', function(childSnapshot, prevChildKey){
+		var path = '/comments/' + key + "/" + childSnapshot.key;
+		comment_load(path);
+	});
+};
+function comment_changes_off(key){
+	ref = firebase.database().ref("/comments/" + key);
+ref.off('child_added');
+ref.off('child_changed');
+ref.off('child_removed');
+}
+
 
 function comment_load(path) {
-
 	firebase.database().ref(path).once('value').then(function(snapshot) {
 		var data = snapshot.val();
 		key = snapshot.key;
