@@ -1,16 +1,6 @@
-
-var $ = require('jquery');
-var firebase = require('firebase');
-var storage = require('firebase/storage');
-// var config = {
-//   apiKey: "AIzaSyAzn1X37VOET1I1x8_cndzMBwVKjyxHKaI",
-//   authDomain: "blog-dudnikov.firebaseapp.com",
-//   databaseURL: "https://blog-dudnikov.firebaseio.com",
-//   storageBucket: "blog-dudnikov.appspot.com",
-//   messagingSenderId: "236563489436"
-// };
-// firebase.initializeApp(config);
-require("./firebase.js");
+// var $ = require('jquery');
+// var firebase = require('firebase');
+// var storage = require('firebase/storage');
 
 Date.prototype.getMonthName = function() {
     var month = ["January", "February", "March", "April",

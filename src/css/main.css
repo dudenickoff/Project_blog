@@ -189,7 +189,6 @@ header[role=banner]::after {
   margin-right: 30px;
   width: 44px;
   height: 100%;
-  background: url("../img/cd-icon-menu.svg") no-repeat center center;
   cursor: pointer;
 }
 .main-nav ul {
@@ -435,15 +434,7 @@ xsigin/signup/userinfo popup
   background-repeat: no-repeat;
   background-position: 50% 0;
 }
-.cd-form label.cd-username {
-  /* background-image: url("../img/cd-icon-username.svg"); */
-}
-.cd-form label.cd-email {
-  /* background-image: url("../img/cd-icon-email.svg"); */
-}
-.cd-form label.cd-password {
-  /* background-image: url("../img/cd-icon-password.svg"); */
-}
+
 .cd-form input {
   margin: 0;
   padding: 0;
@@ -475,8 +466,8 @@ xsigin/signup/userinfo popup
   /* space left for the HIDE button */
   padding-right: 65px;
 }
-.cd-form input[type=submit] {
-  padding: 16px 0;
+.cd-form input[type=button] {
+  padding: 8px 0;
   cursor: pointer;
   background: #2f889a;
   color: #FFF;
@@ -488,7 +479,7 @@ xsigin/signup/userinfo popup
   -o-appearance: none;
   appearance: none;
 }
-.no-touch .cd-form input[type=submit]:hover, .no-touch .cd-form input[type=submit]:focus {
+.no-touch .cd-form input[type=button]:hover, .no-touch .cd-form input[type=button]:focus {
   background: #3599ae;
   outline: none;
 }
@@ -654,7 +645,6 @@ xsigin/signup/userinfo popup
   height: 40px;
   right: 0;
   top: -40px;
-  background: url("../img/cd-icon-close.svg") no-repeat center center;
   text-indent: 100%;
   white-space: nowrap;
   overflow: hidden;
@@ -675,9 +665,10 @@ xsigin/signup/userinfo popup
 .avatar_to_server{
 	float: right;
 	width: 140px;
+  padding: 0px;
 }
 .avatar_upl{
-	width: 101px;
+	width: calc(100% - 400px);
 
 }
 a.cd-create-post{

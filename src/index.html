@@ -3,8 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta content="width=device-width,initial-scale=1.0" name="viewport">
-    <link href='http://fonts.googleapis.com/css?family=PT+Sans:400,700' rel='stylesheet' type='text/css'>
-
+    <link href='https://fonts.googleapis.com/css?family=PT+Sans:400,700' rel='stylesheet' type='text/css'>
+    <link href="css/reset.css" rel="stylesheet">
+    <link href="css/main.css" rel="stylesheet">
     <title>Dudnikov Blog&copy;</title>
    
 </head>
@@ -101,7 +102,7 @@
           </p>
 
           <p class="fieldset">
-            <input class="full-width has-padding" type="submit" id="save_changes" value="Save changes">
+            <input class="full-width has-padding" type="button" id="save_changes" value="Save changes">
           </p>
         </form>
 
@@ -118,7 +119,7 @@
           </p>
 
           <p class="fieldset">
-            <input class="full-width has-padding add_post" type="submit" id="add_post" value="Add post">
+            <input class="full-width has-padding add_post" type="button" id="add_post" value="Add post">
             <input class="full-width has-padding" type="submit" id="edit_post" value="Save edited changes">
           </p>
         </form>
@@ -159,8 +160,8 @@
     <div class="post_text_wrapper">
     <div class="post_header">
       <p class="post_title"></p>
-      <img class="delete_post" src="/src/img/cross.png">
-      <img class="edit_post" src="/src/img/pencil.png">
+      <img class="delete_post" src="./img/cross.png">
+      <img class="edit_post" src="./img/pencil.png">
       </div>
       <p id="text" class="post_text"></p>
     </div>
@@ -174,5 +175,12 @@
       </div>
     </div>
   </div>
+  <script
+  src="https://code.jquery.com/jquery-2.2.1.min.js"
+  integrity="sha256-gvQgAFzTH6trSrAWoH1iPo9Xc96QxSZ3feW6kem+O00="
+  crossorigin="anonymous"></script>
+  <script src="https://www.gstatic.com/firebasejs/4.5.0/firebase.js"></script>
+  <script type="text/javascript" src="js/main.js"></script>
+  <script type="text/javascript" src="js/firebase.js"></script>
 </body>
 </html>
