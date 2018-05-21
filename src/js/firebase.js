@@ -233,7 +233,7 @@ function get_uid() {
 
 function set_user_avatar(uid, place) {
 	$(place).attr({
-		src: "img/loading.gif"
+		src: "./img/loading.gif"
 	});
 	storageRef.child('images/' + uid + "/avatar.jpg").getDownloadURL().then(function(url) {
 		$(place).attr({
@@ -340,12 +340,12 @@ function comment_load(path) {
 		var data = snapshot.val();
 		var key = snapshot.key;
 		var html1 = "<div class=\"post_comment_wrapper " + key + "\"</div>";
-		var html2 = "<div class=\"comment_author_avatar " + key + "\"><a href=\"#0\"><img src=\"/img/loading.gif\"></a></div>";
+		var html2 = "<div class=\"comment_author_avatar " + key + "\"><a href=\"#0\"><img src=\"./img/loading.gif\"></a></div>";
 		var html3 = "<div class=\"userinfo_comment_wrapper " + key + "\"</div>"
 		var html4 = "<h2 class=\"comment_author " + key + "\"></h2>";
 		var html5 = "<p class=\"comment_text " + key + "\"></p>";
 		var html6 = "<p class=\"comment_date " + key + "\"></p>";
-		var images = "<img class=\"edit_comment " + key + "\" src=\"img/pencil.png\" />" + "<img class=\"delete_comment " + snapshot.key + "\" src=\"img/cross.png\" />"
+		var images = "<img class=\"edit_comment " + key + "\" src=\"./img/pencil.png\" />" + "<img class=\"delete_comment " + snapshot.key + "\" src=\"./img/cross.png\" />"
 		$('.post_comments').append(html1);
 		var post_comment_wrapper = ".post_comment_wrapper." + key;
 		$(post_comment_wrapper).append(html2, html3, images);
