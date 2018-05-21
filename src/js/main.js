@@ -1,7 +1,4 @@
-// var $ = require('jquery');
-// var firebase = require('firebase');
-// var storage = require('firebase/storage');
-
+import $ from 'jquery';
 Date.prototype.getMonthName = function() {
     var month = ["January", "February", "March", "April",
       "May", "June", "July", "August", "September",

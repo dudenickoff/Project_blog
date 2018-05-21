@@ -1,66 +1,51 @@
-var path = require('path');
-var BrowserSyncPlugin = require('browser-sync-webpack-plugin');
-var ExtractTextPlugin = require('extract-text-webpack-plugin');
-var HtmlWebpackPlugin = require('html-webpack-plugin');
+const path = require('path');
+const HtmlWebpackPlugin = require ('html-webpack-plugin');
+const ExtractTextPlugin = require('extract-text-webpack-plugin');
+const webpack = require ('webpack');
+
+const PATHS = {
+	build: path.join(__dirname, 'build'),
+	template: path.join(__dirname, 'template'),
+	source: path.join(__dirname, 'src')
+}
 
 module.exports = {
-	entry: [
-		"webpack-dev-server/client?http://localhost:4000",
-		"webpack/hot/only-dev-server",
-		'./src/js/main.js',
-		'./src/js/firebase.js',
-		'./src/css/reset.css',
-		'./src/css/main.css'
-	],
-	output: {
-		path: './build',
-		filename: '[name].js'
+	entry: {
+		'index': PATHS.source + '/index.js'
 	},
-	devtool: 'source-map',
+	output: {
+		path: PATHS.build,
+		filename: 'bundle.js'
+	},
+	plugins: [ 
+		new HtmlWebpackPlugin({
+			template: path.join(__dirname, 'template') + '/index.html'
+		}),
+			new ExtractTextPlugin("style.css")
+	],
+	devtool: "source-map",
 	module: {
-		loaders: [
-	//		{
-	//			test: /\.js$/,
-	//			exclude: /node_modules/,
-	//			loader: 'babel'
-	//		},
-			{
-				test: [ /*\.less$/,*/ /\.css$/ ],
-				loader: ExtractTextPlugin.extract('style-loader', 'css-loader') // !less-loader
+		rules: [
+			{ 
+				test: /\.(png|svg|jpg)$/, 
+				loader: 'file-loader?limit=100000',
+				options: {name: '/img/[name].[ext]'}
 			},
-			// {
-			// 	test: /[\\\/]src[\\\/]js[\\\/]modernizr\.js$/,
-   //          	loader: "imports?this=>window!exports?window.Modernizr"
-			// },
 			{
-				test: /\.(eot|woff|woff2|ttf|svg|png|jpg)$/,
-				loader: 'url-loader?limit=30000&name=[name]-[hash].[ext]'
-			}
+				test: /\.css$/,
+				use: ExtractTextPlugin.extract({
+					fallback: 'style-loader',
+					use: ['css-loader']
+				})
+			},
+			{
+				test: /\.html$/,
+				use: ['html-loader']
+			},
 		]
 	},
-	plugins: [
-		new HtmlWebpackPlugin({
-			//title: 'App Title...',
-			//inject: 'body',
-			template: path.resolve(__dirname, './src/index.html'),
-			// template: path.resolve(__dirname, './src/css.css')
-		}),
-		new BrowserSyncPlugin(
-			{
-				host: 'localhost',
-				port: 3000,
-				//server: {
-				//	baseDir: ['./build']
-				//}//,
-				proxy: 'http://localhost:4000'
-			},
-			{
-				callback: function () {
-					console.log('BrowserSync started...');
-				},
-				reload: true
-			}
-		),
-		new ExtractTextPlugin('[name].css')
-	]
-};
+	devServer: {
+		port: 3000,
+		stats: "errors-only"
+	}
+}

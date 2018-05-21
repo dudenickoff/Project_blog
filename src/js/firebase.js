@@ -1,6 +1,6 @@
-// var $ = require('jquery');
-// var firebase = require('firebase');
-// var storage = require('firebase/storage');
+import firebase from 'firebase';
+import $ from 'jquery';
+
 var config = {
 	apiKey: "AIzaSyAzn1X37VOET1I1x8_cndzMBwVKjyxHKaI",
 	authDomain: "blog-dudnikov.firebaseapp.com",
@@ -25,9 +25,9 @@ $(document).ready(function() {
     }
     });
 });
+var formModal, formLogin, formSignup, formModalTab;
 
 function add_comment_to_post() {
-
 	var today = new Date();
 	var date = today.getDate() + " " + today.getMonthName() + " " + today.getFullYear();
 	var time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
@@ -65,7 +65,6 @@ function save_changes() {
 };
 
 function write_post_to_server() {
-	console.log("WIrite starts!!");
 	var uid = get_uid();
 	return firebase.database().ref('/users/' + uid).once('value').then(function(snapshot) {
 		var user = snapshot.val();
@@ -73,11 +72,9 @@ function write_post_to_server() {
 		var date = today.getDate() + " " + today.getMonthName() + " " + today.getFullYear();
 		var minutes = today.getMinutes();
 		var time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
-
 		var post_theme = $('#modal-post-theme').val();
 		var post_text = $('#modal-post-text').val();
 		var newPostKey = firebase.database().ref().child('posts').push().key;
-		console.log("post_theme ", post_theme, " post_text", post_text, " ", newPostKey);
 		firebase.database().ref('posts/' + newPostKey).set({
 			post_theme: post_theme,
 			post_text: post_text,
@@ -95,7 +92,7 @@ function write_post_to_server() {
 		firebase.database().ref('postkeys/' + newPostKey).set({
 			true: true
 		});
-	$('.cd-user-modal').removeClass('is-visible');
+		$('.cd-user-modal').removeClass('is-visible');
 	});
 };
 
@@ -111,10 +108,10 @@ function save_edited_comment() {
 			comment_text: comment,
 			date: data.date,
 		};
-		updates = {};
+		var updates = {};
 		updates['/comments/' + key1 + "/" + key2] = postData;
+		$('.cd-user-modal').removeClass('is-visible');
 		return firebase.database().ref().update(updates);
-		window.location.reload();
 	});
 }
 
@@ -135,8 +132,8 @@ function edit_comment_post(key1, key2) {
 
 $(".post_comments").on('click', 'img.edit_comment', function(event) {
 	event.preventDefault();
-	key1 = $(".active").attr('class').split(" ")[0];
-	key2 = $(this).attr('class').split(" ")[1];
+	var key1 = $(".active").attr('class').split(" ")[0];
+	var key2 = $(this).attr('class').split(" ")[1];
 	edit_comment_post(key1, key2);
 });
 
@@ -168,7 +165,7 @@ function edit_post() {
 	$('#cd-create-post').addClass('is-selected');
 	$('.new-post').text("Edit post");
 	firebase.database().ref('/posts/' + active_post).once('value').then(function(snapshot) {
-		data = snapshot.val();
+		var data = snapshot.val();
 		$('#modal-post-theme').val(data.post_theme);
 		$('#modal-post-text').text(data.post_text);
 		$('#add_post').css("display", "none");
@@ -179,9 +176,9 @@ function edit_post() {
 function save_edited_post() {
 	var active_post = $(".active").attr('class').split(" ")[0];
 	firebase.database().ref('/posts/' + active_post).once('value').then(function(snapshot) {
-		data = snapshot.val();
+		var data = snapshot.val();
 		var new_post_theme = $('#modal-post-theme').val();
-		var new_post_text = $('#modal-post-text').text();
+		var new_post_text = $('#modal-post-text').val();
 		firebase.database().ref('posts/' + active_post).set({
 			autor_info: {
 				userid: data.autor_info.userid,
@@ -192,7 +189,16 @@ function save_edited_post() {
 			},
 			post_text: new_post_text,
 			post_theme: new_post_theme
+		}, function(error) {
+			if (error) {
+				window.location.reload();
+			} else {
+				posts_load();
+				post_load(active_post);
+				$('.cd-user-modal').removeClass('is-visible');
+			} 
 		});
+
 	});
 };
 
@@ -252,8 +258,8 @@ function userinfo_load() {
 		var username = snapshot.val().username;
 		$(".main-nav ul li").css("display", "inline-block");
 		$(".user_nickname").text(username);
-		place1 = "#cd-logo a img";
-		place2 = ".avatar a img";
+		var place1 = "#cd-logo a img";
+		var place2 = ".avatar a img";
 		set_user_avatar(uid, place1);
 		set_user_avatar(uid, place2);
 		$(".user_nickname").css("visibility", "visible");
@@ -322,17 +328,17 @@ function comment_added(key){
 	});
 };
 function comment_changes_off(key){
-	ref = firebase.database().ref("/comments/" + key);
-ref.off('child_added');
-ref.off('child_changed');
-ref.off('child_removed');
+	var ref = firebase.database().ref("/comments/" + key);
+	ref.off('child_added');
+	ref.off('child_changed');
+	ref.off('child_removed');
 }
 
 
 function comment_load(path) {
 	firebase.database().ref(path).once('value').then(function(snapshot) {
 		var data = snapshot.val();
-		key = snapshot.key;
+		var key = snapshot.key;
 		var html1 = "<div class=\"post_comment_wrapper " + key + "\"</div>";
 		var html2 = "<div class=\"comment_author_avatar " + key + "\"><a href=\"#0\"><img src=\"/img/loading.gif\"></a></div>";
 		var html3 = "<div class=\"userinfo_comment_wrapper " + key + "\"</div>"
@@ -341,7 +347,7 @@ function comment_load(path) {
 		var html6 = "<p class=\"comment_date " + key + "\"></p>";
 		var images = "<img class=\"edit_comment " + key + "\" src=\"img/pencil.png\" />" + "<img class=\"delete_comment " + snapshot.key + "\" src=\"img/cross.png\" />"
 		$('.post_comments').append(html1);
-		post_comment_wrapper = ".post_comment_wrapper." + key;
+		var post_comment_wrapper = ".post_comment_wrapper." + key;
 		$(post_comment_wrapper).append(html2, html3, images);
 		var comment_author_avatar = '.comment_author_avatar.' + key + " " + "a img";
 		var comment_author_name = '.comment_author.' + key;
@@ -455,12 +461,12 @@ function writeUserData(userId, name, email) {
 			"month": month,
 			"year": year
 		},
-		city: "Kiev"
+		city: ''
 	});
 };
 
 function avatar_uploader(avatar) {
-  file = avatar[0];
+  var file = avatar[0];
   var uid = get_uid();
   var metadata = {
     contentType: 'image/jpeg'
@@ -517,6 +523,7 @@ function avatar_uploader(avatar) {
 
     });
 };
+
 
 
 
